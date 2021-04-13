@@ -1,3 +1,4 @@
+// 基础组件
 export const basicComponents = [
   {
     type: 'input',
@@ -226,6 +227,7 @@ export const basicComponents = [
   }
 ]
 
+// 高级组件
 export const advanceComponents = [
   {
     type: 'blank',
@@ -286,6 +288,7 @@ export const advanceComponents = [
   }
 ]
 
+// 布局组件
 export const layoutComponents = [
   {
     type: 'grid',

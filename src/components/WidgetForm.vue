@@ -2,14 +2,12 @@
   <div class="widget-form-container">
     <div v-if="data.list.length == 0" class="form-empty">{{$t('fm.description.containerEmpty')}}</div>
     <el-form :size="data.config.size" label-suffix=":" :label-position="data.config.labelPosition" :label-width="data.config.labelWidth + 'px'">
-      
       <draggable class="" 
         v-model="data.list" 
         v-bind="{group:'people', ghostClass: 'ghost',animation: 200, handle: '.drag-widget'}"
         @end="handleMoveEnd"
         @add="handleWidgetAdd"
       >
-
         <transition-group name="fade" tag="div" class="widget-form-list">
           <template v-for="(element, index) in data.list">
             <template v-if="element.type == 'grid'">
@@ -30,15 +28,16 @@
                         @add="handleWidgetColAdd($event, element, colIndex)"
                       >
                         <transition-group name="fade" tag="div" class="widget-col-list">
-                          <widget-form-item 
-                            v-for="(el, i) in col.list"
-                            :key="el.key"
-                            v-if="el.key"
-                            :element="el" 
-                            :select.sync="selectWidget" 
-                            :index="i" 
-                            :data="col">
-                          </widget-form-item>
+                          <template v-for="(el, i) in col.list">
+                             <widget-form-item 
+                              :key="el.key"
+                              v-if="el.key"
+                              :element="el" 
+                              :select.sync="selectWidget" 
+                              :index="i" 
+                              :data="col">
+                            </widget-form-item>
+                          </template>         
                         </transition-group>
                         
                       </draggable>

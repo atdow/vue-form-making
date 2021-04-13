@@ -3,8 +3,10 @@
     <el-container class="fm2-container">
       <el-main class="fm2-main">
         <el-container>
+          <!-- 左侧组件栏 -->
           <el-aside width="250px">
             <div class="components-list">
+              <!-- 基础字段 -->
               <template v-if="basicFields.length">
                 <div class="widget-cate">{{$t('fm.components.basic.title')}}</div>
                 <draggable tag="ul" :list="basicComponents" 
@@ -13,16 +15,17 @@
                   @start="handleMoveStart"
                   :move="handleMove"
                 >
-                  
-                  <li v-if="basicFields.indexOf(item.type)>=0" class="form-edit-widget-label" :class="{'no-put': item.type == 'divider'}" v-for="(item, index) in basicComponents" :key="index">
-                    <a>
-                      <i class="icon iconfont" :class="item.icon"></i>
-                      <span>{{item.name}}</span>
-                    </a>
-                  </li>
+                  <template v-for="(item, index) in basicComponents">
+                    <li v-if="basicFields.indexOf(item.type)>=0" class="form-edit-widget-label" :class="{'no-put': item.type == 'divider'}"  :key="index">
+                      <a>
+                        <i class="icon iconfont" :class="item.icon"></i>
+                        <span>{{item.name}}</span>
+                      </a>
+                    </li>
+                  </template>       
                 </draggable>
               </template>
-              
+              <!-- 高级字段 -->
               <template v-if="advanceFields.length">
                 <div class="widget-cate">{{$t('fm.components.advance.title')}}</div>
                 <draggable tag="ul" :list="advanceComponents" 
@@ -31,17 +34,18 @@
                   @start="handleMoveStart"
                   :move="handleMove"
                 >
+                  <template v-for="(item, index) in advanceComponents">
+                    <li v-if="advanceFields.indexOf(item.type) >= 0" class="form-edit-widget-label" :class="{'no-put': item.type == 'table'}" :key="index">
+                      <a>
+                        <i class="icon iconfont" :class="item.icon"></i>
+                        <span>{{item.name}}</span>
+                      </a>
+                    </li>
+                  </template>
                   
-                  <li v-if="advanceFields.indexOf(item.type) >= 0" class="form-edit-widget-label" :class="{'no-put': item.type == 'table'}" v-for="(item, index) in advanceComponents" :key="index">
-                    <a>
-                      <i class="icon iconfont" :class="item.icon"></i>
-                      <span>{{item.name}}</span>
-                    </a>
-                  </li>
                 </draggable>
               </template>
-
-              
+              <!-- 布局字段 -->
               <template v-if="layoutFields.length">
                 <div class="widget-cate">{{$t('fm.components.layout.title')}}</div>
                 <draggable tag="ul" :list="layoutComponents" 
@@ -50,19 +54,20 @@
                   @start="handleMoveStart"
                   :move="handleMove"
                 >
-                  
-                  <li v-if="layoutFields.indexOf(item.type) >=0" class="form-edit-widget-label no-put" v-for="(item, index) in layoutComponents" :key="index">
-                    <a>
-                      <i class="icon iconfont" :class="item.icon"></i>
-                      <span>{{item.name}}</span>
-                    </a>
-                  </li>
+                  <template v-for="(item, index) in layoutComponents">
+                    <li v-if="layoutFields.indexOf(item.type) >=0" class="form-edit-widget-label no-put" :key="index">
+                      <a>
+                        <i class="icon iconfont" :class="item.icon"></i>
+                        <span>{{item.name}}</span>
+                      </a>
+                    </li>
+                  </template>           
                 </draggable>
-              </template>
-              
+              </template>          
             </div>
             
           </el-aside>
+          <!-- 中间主体内容 -->
           <el-container class="center-container" direction="vertical">
             <el-header class="btn-bar" style="height: 45px;">
               <slot name="action">
@@ -73,12 +78,11 @@
               <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>
               <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>
             </el-header>
-            <el-main :class="{'widget-empty': widgetForm.list.length == 0}">
-              
+            <el-main :class="{'widget-empty': widgetForm.list.length == 0}">        
               <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
             </el-main>
           </el-container>
-          
+          <!-- 右侧属性编辑栏 -->
           <el-aside class="widget-config-container">
             <el-container>
               <el-header height="45px">
@@ -92,7 +96,7 @@
             </el-container>
             
           </el-aside>
-
+          <!-- 预览 -->
           <cus-dialog
             :visible="previewVisible"
             @on-close="previewVisible = false"
@@ -113,7 +117,7 @@
               <el-button @click="handleReset">{{$t('fm.actions.reset')}}</el-button>
             </template>
           </cus-dialog>
-
+          <!-- 导入JSON -->
           <cus-dialog
             :visible="uploadVisible"
             @on-close="uploadVisible = false"
@@ -125,7 +129,7 @@
             <el-alert type="info" :title="$t('fm.description.uploadJsonInfo')"></el-alert>
             <div id="uploadeditor" style="height: 400px;width: 100%;">{{jsonEg}}</div>
           </cus-dialog>
-
+          <!-- 生成JSON -->
           <cus-dialog
             :visible="jsonVisible"
             @on-close="jsonVisible = false"
@@ -140,7 +144,6 @@
               <el-button type="primary" class="json-btn" :data-clipboard-text="jsonCopyValue">{{$t('fm.actions.copyData')}}</el-button>
             </template>
           </cus-dialog>
-
           <cus-dialog
             :visible="codeVisible"
             @on-close="codeVisible = false"
@@ -229,8 +232,22 @@ export default {
       layoutComponents,
       advanceComponents,
       resetJson: false,
+      // widgetFormData
       widgetForm: {
-        list: [],
+        // [{
+        //   type: 'input',
+        //   icon: 'icon-input',
+        //   options: {
+        //     width: '100%',
+        //     defaultValue: '',
+        //     required: false,
+        //     dataType: 'string',
+        //     pattern: '',
+        //     placeholder: '',
+        //     disabled: false,
+        //   }
+        // }]
+        list: [], // formItemList
         config: {
           labelWidth: 100,
           labelPosition: 'right',
@@ -273,13 +290,13 @@ export default {
       jsonCopyValue: '',
       jsonClipboard: null,
       jsonEg: `{
-  "list": [],
-  "config": {
-    "labelWidth": 100,
-    "labelPosition": "top",
-    "size": "small"
-  }
-}`,
+        "list": [],
+        "config": {
+          "labelWidth": 100,
+          "labelPosition": "top",
+          "size": "small"
+        }
+      }`,
       codeActiveName: 'vue',
     }
   },
@@ -425,7 +442,8 @@ export default {
     widgetForm: {
       deep: true,
       handler: function (val) {
-        console.log(this.$refs.widgetForm)
+         console.log("widgetForm:",this.widgetForm)
+        console.log("this.$refs.widgetForm:",this.$refs.widgetForm)
       }
     },
     '$lang': function (val) {
