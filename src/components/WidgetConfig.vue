@@ -164,6 +164,7 @@
           v-model="data.options.defaultValue"
           :show-alpha="data.options.showAlpha"
         ></el-color-picker>
+        <!-- 新增 -->
         <el-input v-if="data.type=='text'" v-model="data.options.defaultValue"></el-input>
         <el-switch v-if="data.type=='switch'" v-model="data.options.defaultValue"></el-switch>
       </el-form-item>
